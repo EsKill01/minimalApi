@@ -14,11 +14,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/helloword{id:int}", (int id) =>
-{
-    return Results.Ok("Hellow word! id:"+id);
-});
-app.MapPost("/helloword2", () => Results.Ok("Hello word 2!"));
+
 
 
 app.UseHttpsRedirection();
