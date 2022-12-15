@@ -19,9 +19,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("api/coupon",() => Results.Ok(CouponStore.coupons));
+app.MapGet("api/coupon",() => Results.Ok(CouponStore.coupons)).WithName("GetAllCoupons");
 
-app.MapGet("api/coupon{id:int}",(int id) => Results.Ok(CouponStore.coupons.Where(c => c.Id == id)));
+app.MapGet("api/coupon{id:int}",(int id) => Results.Ok(CouponStore.coupons.Where(c => c.Id == id))).WithName("GetCoupon");;
 
 app.MapPost("api/coupon", ([FromBody]Coupon model) =>
 {
@@ -39,8 +39,15 @@ app.MapPost("api/coupon", ([FromBody]Coupon model) =>
     model.Created = DateTime.Now;
 
     CouponStore.coupons.Add(model);
-    return Results.Ok(model);
-});
+
+    return Results.CreatedAtRoute($"GetCoupon", new
+    {
+        Id = model.Id,
+    } , model);
+
+    //return Results.Created($"/api/coupon/{model.Id}", model);
+
+}).WithName("Add coupon");
 
 app.MapPut("api/coupon{id:int}", (int id, [FromBody] Coupon model) =>
 {
@@ -58,14 +65,14 @@ app.MapPut("api/coupon{id:int}", (int id, [FromBody] Coupon model) =>
     CouponStore.coupons.RemoveAll(c => c.Id == id);
     CouponStore.coupons.Add(model);
     return Results.Ok(model);
-});
+}).WithName("UpdateCoupon");;
 
 app.MapDelete("api/coupon{id:int}", (int id) =>
 {
     CouponStore.coupons.RemoveAll(c => c.Id == id);
 
     return Results.Ok("Object deleated");
-});
+}).WithName("DeleteCoupon");
 
 app.UseHttpsRedirection();
 
