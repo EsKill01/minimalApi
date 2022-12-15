@@ -14,8 +14,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/helloword", () => "Hello word!");
-app.MapPost("/helloword2", () => "Hello word 2!");
+app.MapGet("/helloword", () =>
+{
+    return Results.BadRequest("Error hellow word!");
+});
+app.MapPost("/helloword2", () => Results.Ok("Hello word 2!"));
 
 
 app.UseHttpsRedirection();
