@@ -1,3 +1,5 @@
+using AutoMapper;
+using MagicalVilla_CoponAPI;
 using MagicalVilla_CoponAPI.Data;
 using MagicalVilla_CoponAPI.models;
 using MagicalVilla_CoponAPI.Models.DTO;
@@ -10,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(MappingConfig));
 
 var app = builder.Build();
 
@@ -35,7 +38,7 @@ app.MapGet("api/coupon{id:int}", (ILogger<Program> _logger, int id) =>
 
 
 
-app.MapPost("api/coupon", (ILogger<Program> _logger, [FromBody] CouponCreateDTO couponCreateDTO) =>
+app.MapPost("api/coupon", (IMapper _mapper, ILogger<Program> _logger, [FromBody] CouponCreateDTO couponCreateDTO) =>
 {
      _logger.Log(LogLevel.Information, "Post object");
 
@@ -48,13 +51,7 @@ app.MapPost("api/coupon", (ILogger<Program> _logger, [FromBody] CouponCreateDTO 
         return Results.BadRequest("Coupon allready exists");
     }
 
-    Coupon coupon = new Coupon
-    {
-       Name = couponCreateDTO.Name,
-       IsActive= couponCreateDTO.IsActive,
-       Percent= couponCreateDTO.Percent,
-       Created = DateTime.Now
-    };
+    Coupon coupon = _mapper.Map<Coupon>(couponCreateDTO);
 
 
 
@@ -67,14 +64,7 @@ app.MapPost("api/coupon", (ILogger<Program> _logger, [FromBody] CouponCreateDTO 
     {
         Id = coupon.Id,
     } , 
-    new CouponDTO
-    {
-        Name = coupon.Name,
-        IsActive = coupon.IsActive,
-        Percent = coupon.Percent,
-        Id  = coupon.Id,
-        Created = coupon.Created
-    });;
+    _mapper.Map<CouponDTO>(coupon));
 
     //return Results.Created($"/api/coupon/{model.Id}", model);
 
