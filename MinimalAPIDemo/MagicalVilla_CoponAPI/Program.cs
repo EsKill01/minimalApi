@@ -1,5 +1,6 @@
 using MagicalVilla_CoponAPI.Data;
 using MagicalVilla_CoponAPI.models;
+using MagicalVilla_CoponAPI.Models.DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,34 +33,52 @@ app.MapGet("api/coupon{id:int}", (ILogger<Program> _logger, int id) =>
 
 }).WithName("GetCoupon").Produces<Coupon>(StatusCodes.Status200OK);
 
-app.MapPost("api/coupon", (ILogger<Program> _logger, [FromBody]Coupon model) =>
+
+
+app.MapPost("api/coupon", (ILogger<Program> _logger, [FromBody] CouponCreateDTO couponCreateDTO) =>
 {
      _logger.Log(LogLevel.Information, "Post object");
 
-    if (model.Id != 0 || string.IsNullOrEmpty(model.Name))
+    if (string.IsNullOrEmpty(couponCreateDTO.Name))
     {
         return Results.BadRequest("Invalid Id or Coupon name");
     }
-    else if (CouponStore.coupons.FirstOrDefault(c => c.Name.ToLower() == model.Name.ToLower()) != null)
+    else if (CouponStore.coupons.FirstOrDefault(c => c.Name.ToLower() == couponCreateDTO.Name.ToLower()) != null)
     {
         return Results.BadRequest("Coupon allready exists");
     }
 
+    Coupon coupon = new Coupon
+    {
+       Name = couponCreateDTO.Name,
+       IsActive= couponCreateDTO.IsActive,
+       Percent= couponCreateDTO.Percent,
+       Created = DateTime.Now
+    };
 
 
-    model.Id = CouponStore.coupons.OrderByDescending(c => c.Id).FirstOrDefault().Id + 1;
-    model.Created = DateTime.Now;
 
-    CouponStore.coupons.Add(model);
+    coupon.Id = CouponStore.coupons.OrderByDescending(c => c.Id).FirstOrDefault().Id + 1;
+ 
+
+    CouponStore.coupons.Add(coupon);
 
     return Results.CreatedAtRoute($"GetCoupon", new
     {
-        Id = model.Id,
-    } , model);
+        Id = coupon.Id,
+    } , 
+    new CouponDTO
+    {
+        Name = coupon.Name,
+        IsActive = coupon.IsActive,
+        Percent = coupon.Percent,
+        Id  = coupon.Id,
+        Created = coupon.Created
+    });;
 
     //return Results.Created($"/api/coupon/{model.Id}", model);
 
-}).WithName("Add coupon").Accepts<Coupon>("application/json").Produces<Coupon>(StatusCodes.Status201Created).Produces(StatusCodes.Status400BadRequest);
+}).WithName("Add coupon").Accepts<CouponCreateDTO>("application/json").Produces<CouponDTO>(StatusCodes.Status201Created).Produces(StatusCodes.Status400BadRequest);
 
 
 app.MapPut("api/coupon{id:int}", (ILogger<Program> _logger, int id, [FromBody] Coupon model) =>
