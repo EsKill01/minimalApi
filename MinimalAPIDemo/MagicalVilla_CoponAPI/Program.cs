@@ -19,12 +19,23 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("api/coupon",() => Results.Ok(CouponStore.coupons)).WithName("GetAllCoupons").Produces<IEnumerable<Coupon>>(StatusCodes.Status200OK);
-
-app.MapGet("api/coupon{id:int}",(int id) => Results.Ok(CouponStore.coupons.Where(c => c.Id == id))).WithName("GetCoupon").Produces<Coupon>(StatusCodes.Status200OK);
-
-app.MapPost("api/coupon", ([FromBody]Coupon model) =>
+app.MapGet("api/coupon", (ILogger<Program> _logger) =>
 {
+ _logger.Log(LogLevel.Information, "Get all");
+ return Results.Ok(CouponStore.coupons);
+}).WithName("GetAllCoupons").Produces<IEnumerable<Coupon>>(StatusCodes.Status200OK);
+
+app.MapGet("api/coupon{id:int}", (ILogger<Program> _logger, int id) =>
+{
+     _logger.Log(LogLevel.Information, $"Get by id: {id}");
+    Results.Ok(CouponStore.coupons.Where(c => c.Id == id));
+
+}).WithName("GetCoupon").Produces<Coupon>(StatusCodes.Status200OK);
+
+app.MapPost("api/coupon", (ILogger<Program> _logger, [FromBody]Coupon model) =>
+{
+     _logger.Log(LogLevel.Information, "Post object");
+
     if (model.Id != 0 || string.IsNullOrEmpty(model.Name))
     {
         return Results.BadRequest("Invalid Id or Coupon name");
@@ -33,6 +44,7 @@ app.MapPost("api/coupon", ([FromBody]Coupon model) =>
     {
         return Results.BadRequest("Coupon allready exists");
     }
+
 
 
     model.Id = CouponStore.coupons.OrderByDescending(c => c.Id).FirstOrDefault().Id + 1;
@@ -50,8 +62,10 @@ app.MapPost("api/coupon", ([FromBody]Coupon model) =>
 }).WithName("Add coupon").Accepts<Coupon>("application/json").Produces<Coupon>(StatusCodes.Status201Created).Produces(StatusCodes.Status400BadRequest);
 
 
-app.MapPut("api/coupon{id:int}", (int id, [FromBody] Coupon model) =>
+app.MapPut("api/coupon{id:int}", (ILogger<Program> _logger, int id, [FromBody] Coupon model) =>
 {
+    _logger.Log(LogLevel.Information, $"Put object {id}");
+
     if (model.Id == 0 || string.IsNullOrEmpty(model.Name))
     {
         return Results.BadRequest("Invalid Id or Coupon name");
@@ -69,11 +83,13 @@ app.MapPut("api/coupon{id:int}", (int id, [FromBody] Coupon model) =>
 }).WithName("UpdateCoupon").Produces<Coupon>(StatusCodes.Status200OK).Produces(StatusCodes.Status400BadRequest);
 
 
-app.MapDelete("api/coupon{id:int}", (int id) =>
+app.MapDelete("api/coupon{id:int}", (ILogger<Program> _logger, int id) =>
 {
+     _logger.Log(LogLevel.Information, $"Delete object {id}");
+
     CouponStore.coupons.RemoveAll(c => c.Id == id);
 
-    return Results.Ok("Object deleated");
+    return Results.Ok("Object deleted");
 }).WithName("DeleteCoupon").Produces<String>(StatusCodes.Status200OK).Produces(StatusCodes.Status400BadRequest);;
 
 app.UseHttpsRedirection();
