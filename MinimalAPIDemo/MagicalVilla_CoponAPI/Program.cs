@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using MagicalVilla_CoponAPI;
 using MagicalVilla_CoponAPI.Data;
 using MagicalVilla_CoponAPI.models;
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 var app = builder.Build();
 
@@ -38,13 +40,15 @@ app.MapGet("api/coupon{id:int}", (ILogger<Program> _logger, int id) =>
 
 
 
-app.MapPost("api/coupon", (IMapper _mapper, ILogger<Program> _logger, [FromBody] CouponCreateDTO couponCreateDTO) =>
+app.MapPost("api/coupon", (IMapper _mapper, IValidator<CouponCreateDTO> _validator, ILogger<Program> _logger, [FromBody] CouponCreateDTO couponCreateDTO) =>
 {
      _logger.Log(LogLevel.Information, "Post object");
 
-    if (string.IsNullOrEmpty(couponCreateDTO.Name))
+    var validationResult = _validator.ValidateAsync(couponCreateDTO).GetAwaiter().GetResult();
+
+    if (!validationResult.IsValid)
     {
-        return Results.BadRequest("Invalid Id or Coupon name");
+        return Results.BadRequest(validationResult.Errors.FirstOrDefault().ToString());
     }
     else if (CouponStore.coupons.FirstOrDefault(c => c.Name.ToLower() == couponCreateDTO.Name.ToLower()) != null)
     {
@@ -71,25 +75,26 @@ app.MapPost("api/coupon", (IMapper _mapper, ILogger<Program> _logger, [FromBody]
 }).WithName("Add coupon").Accepts<CouponCreateDTO>("application/json").Produces<CouponDTO>(StatusCodes.Status201Created).Produces(StatusCodes.Status400BadRequest);
 
 
-app.MapPut("api/coupon{id:int}", (ILogger<Program> _logger, int id, [FromBody] Coupon model) =>
+app.MapPut("api/coupon{id:int}", (IMapper _mapper, ILogger<Program> _logger, int id, [FromBody] CouponUpdateDTO model) =>
 {
     _logger.Log(LogLevel.Information, $"Put object {id}");
 
-    if (model.Id == 0 || string.IsNullOrEmpty(model.Name))
-    {
-        return Results.BadRequest("Invalid Id or Coupon name");
-    }
-    else if(CouponStore.coupons.FirstOrDefault(c => c.Id == id) == null)
+    if(CouponStore.coupons.FirstOrDefault(c => c.Id == id) == null)
     {
         return Results.BadRequest("Coupon do not exists");
     }
 
-    model.LastUpdate = DateTime.Now;
+    Coupon coupon = _mapper.Map<Coupon>(model);
+
+    coupon.LastUpdate = DateTime.Now;
 
     CouponStore.coupons.RemoveAll(c => c.Id == id);
-    CouponStore.coupons.Add(model);
-    return Results.Ok(model);
-}).WithName("UpdateCoupon").Produces<Coupon>(StatusCodes.Status200OK).Produces(StatusCodes.Status400BadRequest);
+    CouponStore.coupons.Add(coupon);
+
+    CouponUpDTO upDTO = _mapper.Map<CouponUpDTO>(coupon);
+
+    return Results.Ok(upDTO);
+}).WithName("UpdateCoupon").Produces<CouponUpDTO>(StatusCodes.Status200OK).Produces(StatusCodes.Status400BadRequest);
 
 
 app.MapDelete("api/coupon{id:int}", (ILogger<Program> _logger, int id) =>
