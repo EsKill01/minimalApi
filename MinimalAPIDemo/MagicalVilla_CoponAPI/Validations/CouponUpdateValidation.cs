@@ -9,6 +9,7 @@ namespace MagicalVilla_CoponAPI.Validations
         {
             RuleFor(model => model.Name).NotEmpty();
             RuleFor(model => model.Percent).InclusiveBetween(1, 100);
+            RuleFor(model => model.Id).GreaterThan(0);
         }
     }
 }
