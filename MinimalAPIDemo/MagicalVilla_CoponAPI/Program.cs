@@ -38,13 +38,13 @@ app.MapGet("api/coupon", (ApplicationDbContext _db, ILogger<Program> _logger) =>
     return Results.Ok(apiResponse);
 }).WithName("GetAllCoupons").Produces<ApiResponse>(StatusCodes.Status200OK);
 
-app.MapGet("api/coupon{id:int}", (ApplicationDbContext _db, ILogger<Program> _logger, int id) =>
+app.MapGet("api/coupon{id:int}", async (ApplicationDbContext _db, ILogger<Program> _logger, int id) =>
 {
     ApiResponse apiResponse= new ApiResponse();
 
     _logger.Log(LogLevel.Information, $"Get by id: {id}");
 
-    Coupon coupon = _db.Coupons.FirstOrDefault(c => c.Id == id);
+    Coupon coupon = await _db.Coupons.FirstOrDefaultAsync(c => c.Id == id);
 
     if (coupon == null)
     {
@@ -88,7 +88,7 @@ app.MapPost("api/coupon", async (ApplicationDbContext _db, IMapper _mapper,
 
     Coupon coupon = _mapper.Map<Coupon>(couponCreateDTO);
 
-    _db.Coupons.Add(coupon);
+    await _db.Coupons.AddAsync(coupon);
     await _db.SaveChangesAsync();
 
 
@@ -108,7 +108,7 @@ app.MapPut("api/coupon/{id:int}", async (ApplicationDbContext _db, IValidator<Co
     ApiResponse apiResponse = new();
     _logger.Log(LogLevel.Information, $"Put object {id}");
 
-    var couponToUpdate = _db.Coupons.FirstOrDefault(c => c.Id == id);
+    var couponToUpdate = await _db.Coupons.FirstOrDefaultAsync(c => c.Id == id);
 
     if (couponToUpdate == null)
     {
@@ -154,7 +154,7 @@ app.MapDelete("api/coupon/{id:int}", async (ApplicationDbContext _db, ILogger<Pr
     ApiResponse apiResponse = new ApiResponse();
     _logger.Log(LogLevel.Information, $"Delete object {id}");
 
-    Coupon coupon = _db.Coupons.FirstOrDefault(c => c.Id == id);
+    Coupon coupon = await _db.Coupons.FirstOrDefaultAsync(c => c.Id == id);
 
     if(coupon == null)
     {
