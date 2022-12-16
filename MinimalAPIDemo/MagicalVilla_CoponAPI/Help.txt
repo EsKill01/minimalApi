@@ -1,0 +1,7 @@
+﻿Use migrations like:
+
+PM> add-migration AddCouponToDb
+
+Comando actualizar DB:
+
+ update-database
