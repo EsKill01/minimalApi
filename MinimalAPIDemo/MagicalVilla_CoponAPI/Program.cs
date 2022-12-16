@@ -94,7 +94,9 @@ app.MapPut("api/coupon/{id:int}", async (IValidator<CouponUpdateDTO> _validator,
     ApiResponse apiResponse = new();
     _logger.Log(LogLevel.Information, $"Put object {id}");
 
-    if (CouponStore.coupons.FirstOrDefault(c => c.Id == id) == null)
+    var couponToUpdate = CouponStore.coupons.FirstOrDefault(c => c.Id == id);
+
+    if (couponToUpdate == null)
     {
         apiResponse.IsSuccess = false;
         apiResponse.ErrorMessages.Add("Coupon do not exists");
@@ -113,14 +115,14 @@ app.MapPut("api/coupon/{id:int}", async (IValidator<CouponUpdateDTO> _validator,
         return Results.BadRequest(apiResponse);
     }
 
-    Coupon coupon = _mapper.Map<Coupon>(model);
+    couponToUpdate.Percent = model.Percent;
+    couponToUpdate.IsActive = model.IsActive;
+    couponToUpdate.Name = model.Name;
+    couponToUpdate.LastUpdate = DateTime.Now;
 
-    coupon.LastUpdate = DateTime.Now;
+   
 
-    CouponStore.coupons.RemoveAll(c => c.Id == id);
-    CouponStore.coupons.Add(coupon);
-
-    CouponUpDTO upDTO = _mapper.Map<CouponUpDTO>(coupon);
+    CouponUpDTO upDTO = _mapper.Map<CouponUpDTO>(couponToUpdate);
 
     apiResponse.Result = upDTO;
 
