@@ -10,50 +10,55 @@
 
     public static class PostCoupon
     {
-        public static void ConfigurePostCouponEndPoint(this WebApplication app)
-        {
-            app.MapPost("api/coupon", async (ICouponRepository _couponRepository, IMapper _mapper,
+        private static async Task<IResult> postCoupon(
+            ICouponRepository _couponRepository, 
+            IMapper _mapper,
             IValidator<CouponCreateDTO> _validator,
             ILogger<Program> _logger,
-                        [FromBody] CouponCreateDTO couponCreateDTO) =>
+            [FromBody] CouponCreateDTO couponCreateDTO)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            _logger.Log(LogLevel.Information, "Post object");
+
+            var validationResult = await _validator.ValidateAsync(couponCreateDTO);
+            var existName = await _couponRepository.GetAsycn(couponCreateDTO.Name);
+
+            if (!validationResult.IsValid)
             {
-                ApiResponse apiResponse = new ApiResponse();
-                _logger.Log(LogLevel.Information, "Post object");
+                apiResponse.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                apiResponse.IsSuccess = false;
+                apiResponse.ErrorMessages.Add(validationResult.Errors.FirstOrDefault().ErrorMessage);
+                return Results.BadRequest(apiResponse);
+            }
+            else if (existName != null)
+            {
+                apiResponse.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                apiResponse.IsSuccess = false;
+                apiResponse.ErrorMessages.Add(validationResult.Errors.FirstOrDefault().ErrorMessage);
+                return Results.BadRequest("Coupon allready exists");
+            }
 
-                var validationResult = await _validator.ValidateAsync(couponCreateDTO);
-                var existName = await _couponRepository.GetAsycn(couponCreateDTO.Name);
+            Coupon coupon = _mapper.Map<Coupon>(couponCreateDTO);
 
-                if (!validationResult.IsValid)
-                {
-                    apiResponse.StatusCode = System.Net.HttpStatusCode.BadRequest;
-                    apiResponse.IsSuccess = false;
-                    apiResponse.ErrorMessages.Add(validationResult.Errors.FirstOrDefault().ErrorMessage);
-                    return Results.BadRequest(apiResponse);
-                }
-                else if (existName != null)
-                {
-                    apiResponse.StatusCode = System.Net.HttpStatusCode.BadRequest;
-                    apiResponse.IsSuccess = false;
-                    apiResponse.ErrorMessages.Add(validationResult.Errors.FirstOrDefault().ErrorMessage);
-                    return Results.BadRequest("Coupon allready exists");
-                }
-
-                Coupon coupon = _mapper.Map<Coupon>(couponCreateDTO);
-
-                await _couponRepository.CreateAsync(coupon);
-                await _couponRepository.SaveAsync();
+            await _couponRepository.CreateAsync(coupon);
+            await _couponRepository.SaveAsync();
 
 
-                apiResponse.Result = coupon;
+            apiResponse.Result = coupon;
 
-                return Results.CreatedAtRoute($"GetCoupon", new
-                {
-                    Id = coupon.Id,
-                },
-                apiResponse);
-
-                //return Results.Created($"/api/coupon/{model.Id}", model);
-            }).WithName("Add coupon").Accepts<CouponCreateDTO>("application/json").Produces<ApiResponse>(StatusCodes.Status201Created).Produces(StatusCodes.Status400BadRequest);
+            return Results.CreatedAtRoute($"GetCoupon", new
+            {
+                Id = coupon.Id,
+            },
+            apiResponse);
+        }
+        public static void ConfigurePostCouponEndPoint(this WebApplication app)
+        {
+            app.MapPost("api/coupon", postCoupon)
+                .WithName("Add coupon")
+                .Accepts<CouponCreateDTO>("application/json")
+                .Produces<ApiResponse>(StatusCodes.Status201Created)
+                .Produces(StatusCodes.Status400BadRequest);
         }
     }
 }

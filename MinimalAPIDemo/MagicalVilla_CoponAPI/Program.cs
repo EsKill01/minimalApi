@@ -32,11 +32,6 @@ if (app.Environment.IsDevelopment())
 }
 
 
-
-
-
-
-
 #region CouponEndPoints
 
 app.ConfigureCouponGetEndPoints();

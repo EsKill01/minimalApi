@@ -6,32 +6,37 @@ namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
 {
     public static class DeleteCoupon
     {
-        public static void ConfigureDeleteCouponEndPoint(this WebApplication app)
+        private async static Task<IResult> deleteCoupon(ICouponRepository _couponRepository, ILogger<Program> _logger, int id)
         {
-            app.MapDelete("api/coupon/{id:int}", async (ICouponRepository _couponRepository, ILogger<Program> _logger, int id) =>
-{
-                ApiResponse apiResponse = new ApiResponse();
-                _logger.Log(LogLevel.Information, $"Delete object {id}");
+            ApiResponse apiResponse = new ApiResponse();
+            _logger.Log(LogLevel.Information, $"Delete object {id}");
 
-                Coupon coupon = await _couponRepository.GetAsycn(id);
+            Coupon coupon = await _couponRepository.GetAsycn(id);
 
-                if (coupon == null)
-                {
-                    apiResponse.IsSuccess = false;
-                    apiResponse.ErrorMessages.Add("Object do not exits");
-                    apiResponse.StatusCode = System.Net.HttpStatusCode.BadRequest;
+            if (coupon == null)
+            {
+                apiResponse.IsSuccess = false;
+                apiResponse.ErrorMessages.Add("Object do not exits");
+                apiResponse.StatusCode = System.Net.HttpStatusCode.BadRequest;
 
-                    return Results.BadRequest(apiResponse);
-                }
+                return Results.BadRequest(apiResponse);
+            }
 
-                apiResponse.Result = "Object deleted";
+            apiResponse.Result = "Object deleted";
 
-                await _couponRepository.RemoveAsync(coupon);
+            await _couponRepository.RemoveAsync(coupon);
 
-                await _couponRepository.SaveAsync();
+            await _couponRepository.SaveAsync();
 
-                return Results.Ok(apiResponse);
-            }).WithName("DeleteCoupon").Produces<ApiResponse>(StatusCodes.Status200OK).Produces(StatusCodes.Status400BadRequest);
+            return Results.Ok(apiResponse);
+        }
+        public static void ConfigureDeleteCouponEndPoint(this WebApplication app)
+        { 
+
+            app.MapDelete("api/coupon/{id:int}", deleteCoupon)
+                .WithName("DeleteCoupon")
+                .Produces<ApiResponse>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest);
         }
     }
 }
