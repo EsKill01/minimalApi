@@ -38,7 +38,7 @@ app.MapGet("api/coupon", (ApplicationDbContext _db, ILogger<Program> _logger) =>
     return Results.Ok(apiResponse);
 }).WithName("GetAllCoupons").Produces<ApiResponse>(StatusCodes.Status200OK);
 
-app.MapGet("api/coupon{id:int}", async (ApplicationDbContext _db, ILogger<Program> _logger, int id) =>
+app.MapGet("api/coupon/{id:int}", async (ApplicationDbContext _db, ILogger<Program> _logger, int id) =>
 {
     ApiResponse apiResponse= new ApiResponse();
 
