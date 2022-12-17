@@ -6,7 +6,7 @@ using MagicalVilla_CoponAPI.EndPoints.CouponEndPoints;
 using MagicalVilla_CoponAPI.models;
 using MagicalVilla_CoponAPI.Models;
 using MagicalVilla_CoponAPI.Models.DTO;
-using MagicalVilla_CoponAPI.Repository;
+using MagicalVilla_CoponAPI.Repository.CouponRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

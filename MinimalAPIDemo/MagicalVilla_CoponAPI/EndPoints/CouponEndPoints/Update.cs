@@ -2,7 +2,6 @@
 using FluentValidation;
 using MagicalVilla_CoponAPI.Models;
 using MagicalVilla_CoponAPI.Models.DTO.Coupon;
-using MagicalVilla_CoponAPI.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints

@@ -2,7 +2,7 @@
 using MagicalVilla_CoponAPI.models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MagicalVilla_CoponAPI.Repository
+namespace MagicalVilla_CoponAPI.Repository.CouponRepository
 {
     public class CouponRepository : ICouponRepository
     {
@@ -34,9 +34,9 @@ namespace MagicalVilla_CoponAPI.Repository
 
         public async Task RemoveAsync(Coupon coupon)
         {
-             _db.Remove(coupon);
+            _db.Remove(coupon);
 
-             await Task.FromResult(coupon);
+            await Task.FromResult(coupon);
         }
 
         public async Task SaveAsync()
@@ -46,9 +46,9 @@ namespace MagicalVilla_CoponAPI.Repository
 
         public async Task UpdateAsync(Coupon coupon)
         {
-             _db.Update(coupon);
+            _db.Update(coupon);
 
-             await Task.FromResult(coupon);
+            await Task.FromResult(coupon);
         }
     }
 }
