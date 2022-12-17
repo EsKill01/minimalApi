@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MagicalVilla_CoponAPI.models;
-using MagicalVilla_CoponAPI.Models.DTO;
+using MagicalVilla_CoponAPI.Models.DTO.Coupon;
 
 namespace MagicalVilla_CoponAPI
 {

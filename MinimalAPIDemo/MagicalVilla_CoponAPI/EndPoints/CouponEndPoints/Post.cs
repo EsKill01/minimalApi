@@ -4,7 +4,7 @@
     using FluentValidation;
     using MagicalVilla_CoponAPI.models;
     using MagicalVilla_CoponAPI.Models;
-    using MagicalVilla_CoponAPI.Models.DTO;
+    using MagicalVilla_CoponAPI.Models.DTO.Coupon;
     using MagicalVilla_CoponAPI.Repository;
     using Microsoft.AspNetCore.Mvc;
 

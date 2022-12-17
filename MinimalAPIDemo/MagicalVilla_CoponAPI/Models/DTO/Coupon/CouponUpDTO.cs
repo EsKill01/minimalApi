@@ -1,6 +1,6 @@
-﻿namespace MagicalVilla_CoponAPI.Models.DTO
+﻿namespace MagicalVilla_CoponAPI.Models.DTO.Coupon
 {
-    public class CouponUpdateDTO
+    public class CouponUpDTO
     {
         public int Id { get; set; }
 
@@ -9,5 +9,7 @@
         public int Percent { get; set; }
 
         public bool IsActive { get; set; }
+
+        public DateTime? Update { get; set; }
     }
 }

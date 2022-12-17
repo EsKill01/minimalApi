@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MagicalVilla_CoponAPI.Models.DTO;
+using MagicalVilla_CoponAPI.Models.DTO.Coupon;
 
 namespace MagicalVilla_CoponAPI.Validations
 {

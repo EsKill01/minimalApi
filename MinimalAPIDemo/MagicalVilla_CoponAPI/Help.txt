@@ -1,5 +1,7 @@
 ﻿Use migrations like:
 
+1-firts create and entity in folder models
+
 PM> add-migration AddCouponToDb
 
 Comando actualizar DB:
