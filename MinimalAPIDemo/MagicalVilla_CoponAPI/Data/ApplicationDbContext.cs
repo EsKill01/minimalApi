@@ -1,4 +1,5 @@
 ﻿using MagicalVilla_CoponAPI.models;
+using MagicalVilla_CoponAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MagicalVilla_CoponAPI.Data
@@ -11,6 +12,7 @@ namespace MagicalVilla_CoponAPI.Data
         }
 
         public DbSet<Coupon>  Coupons { get; set; }
+        public DbSet<LocalUser>  LocalUsers { get; set; }
 
        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
