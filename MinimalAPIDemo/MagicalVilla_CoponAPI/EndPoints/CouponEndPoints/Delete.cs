@@ -1,5 +1,6 @@
 ﻿using MagicalVilla_CoponAPI.models;
 using MagicalVilla_CoponAPI.Models;
+using MagicalVilla_CoponAPI.Repository.CouponRepository;
 
 namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
 {

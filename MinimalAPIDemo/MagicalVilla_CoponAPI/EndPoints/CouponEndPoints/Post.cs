@@ -5,6 +5,7 @@
     using MagicalVilla_CoponAPI.models;
     using MagicalVilla_CoponAPI.Models;
     using MagicalVilla_CoponAPI.Models.DTO.Coupon;
+    using MagicalVilla_CoponAPI.Repository.CouponRepository;
     using Microsoft.AspNetCore.Mvc;
 
     public static class PostCoupon

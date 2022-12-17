@@ -6,7 +6,7 @@ namespace MagicalVilla_CoponAPI.Repository.AuthRepository
     {
         Task<bool> IsUniqueUserAsync(string username);
 
-        Task<LocalUserLoginResponseDTO> AuthenticateAsync(LocalUserLoginResponseDTO localUserLoginResponseDTO);
+        Task<LocalUserLoginResponseDTO> AuthenticateAsync(LocalUserLoginDTO localUserLoginResponseDTO);
 
         Task<LocalUserDTO> RegisterAsync(LocalUserDTO localUserDTO);
     }

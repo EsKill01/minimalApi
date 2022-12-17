@@ -1,6 +1,6 @@
 ﻿using MagicalVilla_CoponAPI.models;
 
-namespace MagicalVilla_CoponAPI.Repository.CouponRepository.CouponRepository
+namespace MagicalVilla_CoponAPI.Repository.CouponRepository
 {
     public interface ICouponRepository
     {
