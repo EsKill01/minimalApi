@@ -19,8 +19,13 @@ namespace MagicalVilla_CoponAPI
 
             CreateMap<LocalUser, LocalUserDTO>().ReverseMap();
             CreateMap<LocalUserLoginDTO, LocalUserLoginResponseDTO>().ReverseMap();
+
+            CreateMap<LocalUserLoginDTO, LocalUserDTO>().ReverseMap();
+
             CreateMap<LocalUser, LocalUserRegistrationDTO>().ReverseMap();
             CreateMap<LocalUserDTO, LocalUserRegistrationDTO>().ReverseMap();
+            CreateMap<LocalUserLoginDTO, LocalUserDTO>()
+               .ForMember(dest => dest.UserName, act => act.MapFrom(src => src.UserName)).ReverseMap();
 
             #endregion
 

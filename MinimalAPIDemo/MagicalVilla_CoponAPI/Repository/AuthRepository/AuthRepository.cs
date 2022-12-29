@@ -52,7 +52,7 @@ namespace MagicalVilla_CoponAPI.Repository.AuthRepository
                 LocalUserLoginResponseDTO reponse = new LocalUserLoginResponseDTO
                 {
                     Token = writenToken,
-                    User = _mapper.Map<LocalUserDTO>(localUserLoginDTO)
+                    User = _mapper.Map<LocalUserDTO>(userAutincate)
                 };
 
                 return await Task.FromResult(reponse);
