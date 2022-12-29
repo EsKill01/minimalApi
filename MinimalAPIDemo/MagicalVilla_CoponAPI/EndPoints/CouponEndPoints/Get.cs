@@ -4,7 +4,7 @@ using MagicalVilla_CoponAPI.Repository.CouponRepository;
 
 namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
 {
-    public static class GetCoupon
+    public static partial class CouponEndPoint
     {
         private static async Task<IResult> gelAllCoponds(ICouponRepository _couponRepository, ILogger<Program> _logger)
         {

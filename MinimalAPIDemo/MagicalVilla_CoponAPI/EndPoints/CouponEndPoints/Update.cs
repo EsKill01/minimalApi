@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
 {
-    public static class UpdateCoupon
+    public static partial class CouponEndPoint
     {
         private static async Task<IResult> updateCoupon(
             ICouponRepository _couponRepository, 

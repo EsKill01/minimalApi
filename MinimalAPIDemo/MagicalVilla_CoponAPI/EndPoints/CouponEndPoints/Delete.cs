@@ -4,7 +4,7 @@ using MagicalVilla_CoponAPI.Repository.CouponRepository;
 
 namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
 {
-    public static class DeleteCoupon
+    public static partial class CouponEndPoint
     {
         private async static Task<IResult> deleteCoupon(ICouponRepository _couponRepository, ILogger<Program> _logger, int id)
         {

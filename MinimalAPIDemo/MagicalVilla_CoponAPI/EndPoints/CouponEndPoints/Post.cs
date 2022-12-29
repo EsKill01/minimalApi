@@ -8,7 +8,7 @@
     using MagicalVilla_CoponAPI.Repository.CouponRepository;
     using Microsoft.AspNetCore.Mvc;
 
-    public static class PostCoupon
+    public static partial class CouponEndPoint
     {
         private static async Task<IResult> postCoupon(
             ICouponRepository _couponRepository, 

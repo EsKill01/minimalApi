@@ -35,6 +35,9 @@ if (app.Environment.IsDevelopment())
 }
 
 
+//app.UseAuthentication();
+//app.UseAuthorization();
+
 #region CouponEndPoints
 
 app.ConfigureCouponGetEndPoints();

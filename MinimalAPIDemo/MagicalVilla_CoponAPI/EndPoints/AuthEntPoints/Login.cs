@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MagicalVilla_CoponAPI.EndPoints.AuthEntPoints
 {
-    public static class LoginUser
+    public static partial class AuthEndPoint
     {
         private static async Task<IResult> loginUser(IAuthRepository _authRepository, 
             IValidator<LocalUserLoginDTO> _validator, 
