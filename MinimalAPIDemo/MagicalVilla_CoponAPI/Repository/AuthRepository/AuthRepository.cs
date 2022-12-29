@@ -47,11 +47,11 @@ namespace MagicalVilla_CoponAPI.Repository.AuthRepository
                 };
 
                 var token = tokenHandler.CreateToken(tokenDescription);
-
+                var writenToken = new JwtSecurityTokenHandler().WriteToken(token);
 
                 LocalUserLoginResponseDTO reponse = new LocalUserLoginResponseDTO
                 {
-                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    Token = writenToken,
                     User = _mapper.Map<LocalUserDTO>(localUserLoginDTO)
                 };
 
@@ -75,16 +75,18 @@ namespace MagicalVilla_CoponAPI.Repository.AuthRepository
             }
         }
 
-        public async Task<LocalUserDTO> RegisterAsync(LocalUserDTO localUserDTO)
+        public async Task<LocalUserDTO> RegisterAsync(LocalUserRegistrationDTO localUserDTO)
         {
 
             var localUser = _mapper.Map<LocalUser>(localUserDTO);
             localUser.Role = "Admin";
 
             await _db.LocalUsers.AddAsync(localUser);
-            localUser.Password = string.Empty;
+            await _db.SaveChangesAsync();
 
-            return _mapper.Map<LocalUserDTO>(localUser);
+            var user = await _db.LocalUsers.FirstOrDefaultAsync(c => c.UserName == localUserDTO.UserName);
+
+            return _mapper.Map<LocalUserDTO>(user);
         }
     }
 }

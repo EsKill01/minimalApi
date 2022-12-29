@@ -17,5 +17,12 @@ namespace MagicalVilla_CoponAPI.Models
 
         public List<string> ErrorMessages { get; set; }
 
+        public void SetFailResponse(List<string> errorMessages, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+        {
+            ErrorMessages = errorMessages;
+            StatusCode = statusCode;
+            IsSuccess = false;
+        }
+
     }
 }

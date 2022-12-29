@@ -2,10 +2,12 @@ using AutoMapper;
 using FluentValidation;
 using MagicalVilla_CoponAPI;
 using MagicalVilla_CoponAPI.Data;
+using MagicalVilla_CoponAPI.EndPoints.AuthEntPoints;
 using MagicalVilla_CoponAPI.EndPoints.CouponEndPoints;
 using MagicalVilla_CoponAPI.models;
 using MagicalVilla_CoponAPI.Models;
 using MagicalVilla_CoponAPI.Models.DTO;
+using MagicalVilla_CoponAPI.Repository.AuthRepository;
 using MagicalVilla_CoponAPI.Repository.CouponRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
@@ -38,6 +41,13 @@ app.ConfigureCouponGetEndPoints();
 app.ConfigurePostCouponEndPoint();
 app.ConfigureCouponUpdateEndPoint();
 app.ConfigureDeleteCouponEndPoint();
+
+#endregion
+
+#region AuthEndPoints
+
+app.ConfigureCreateUserEndPoint();
+app.ConfigureLoginEndPoint();
 
 #endregion
 

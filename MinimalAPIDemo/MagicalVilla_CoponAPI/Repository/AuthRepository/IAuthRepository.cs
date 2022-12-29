@@ -8,6 +8,6 @@ namespace MagicalVilla_CoponAPI.Repository.AuthRepository
 
         Task<LocalUserLoginResponseDTO> AuthenticateAsync(LocalUserLoginDTO localUserLoginResponseDTO);
 
-        Task<LocalUserDTO> RegisterAsync(LocalUserDTO localUserDTO);
+        Task<LocalUserDTO> RegisterAsync(LocalUserRegistrationDTO localUserDTO);
     }
 }
