@@ -50,6 +50,17 @@ namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
 
             app.MapGet("api/coupon/{id:int}", getByIdCoupon)
                 .WithName("GetCoupon")
+                .AddEndpointFilter(async (context, next) =>
+                {
+                    var id = context.GetArgument<int>(2);
+
+                    if (id == 0)
+                    {
+                        return Results.BadRequest("Id can not be 0");
+                    }
+
+                    return await next(context);
+                })
                 .Produces<ApiResponse>(StatusCodes.Status200OK)
                 .RequireAuthorization("AdminOnly");
         }
