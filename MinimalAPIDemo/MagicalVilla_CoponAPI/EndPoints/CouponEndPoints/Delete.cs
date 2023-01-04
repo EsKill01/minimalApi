@@ -36,7 +36,8 @@ namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
             app.MapDelete("api/coupon/{id:int}", deleteCoupon)
                 .WithName("DeleteCoupon")
                 .Produces<ApiResponse>(StatusCodes.Status200OK)
-                .Produces(StatusCodes.Status400BadRequest);
+                .Produces(StatusCodes.Status400BadRequest)
+                .RequireAuthorization();
         }
     }
 }

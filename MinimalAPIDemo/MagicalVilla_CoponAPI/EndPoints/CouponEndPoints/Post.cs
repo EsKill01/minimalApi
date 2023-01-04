@@ -58,7 +58,8 @@
                 .WithName("Add coupon")
                 .Accepts<CouponCreateDTO>("application/json")
                 .Produces<ApiResponse>(StatusCodes.Status201Created)
-                .Produces(StatusCodes.Status400BadRequest);
+                .Produces(StatusCodes.Status400BadRequest)
+                .RequireAuthorization();
         }
     }
 }

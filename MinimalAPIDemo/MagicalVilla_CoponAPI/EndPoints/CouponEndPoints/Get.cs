@@ -42,11 +42,13 @@ namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
         {
             app.MapGet("api/coupon", gelAllCoponds)
                 .WithName("GetAllCoupons")
-                .Produces<ApiResponse>(StatusCodes.Status200OK);
+                .Produces<ApiResponse>(StatusCodes.Status200OK)
+                .RequireAuthorization();
 
             app.MapGet("api/coupon/{id:int}", getByIdCoupon)
                 .WithName("GetCoupon")
-                .Produces<ApiResponse>(StatusCodes.Status200OK);
+                .Produces<ApiResponse>(StatusCodes.Status200OK)
+                .RequireAuthorization();
         }
     }
 }

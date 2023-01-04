@@ -66,7 +66,8 @@ namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
             app.MapPut("api/coupon/{id:int}", updateCoupon)
                 .Accepts<CouponUpdateDTO>("application/json")
                 .WithName("UpdateCoupon")
-                .Produces<ApiResponse>(StatusCodes.Status200OK).Produces(StatusCodes.Status400BadRequest);
+                .Produces<ApiResponse>(StatusCodes.Status200OK).Produces(StatusCodes.Status400BadRequest)
+                .RequireAuthorization();
         }
     }
 }
