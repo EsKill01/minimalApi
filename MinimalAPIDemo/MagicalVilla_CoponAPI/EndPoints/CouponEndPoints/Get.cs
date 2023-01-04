@@ -1,4 +1,5 @@
-﻿using MagicalVilla_CoponAPI.models;
+﻿using MagicalVilla_CoponAPI.Filters;
+using MagicalVilla_CoponAPI.models;
 using MagicalVilla_CoponAPI.Models;
 using MagicalVilla_CoponAPI.Repository.CouponRepository;
 using Microsoft.AspNetCore.Authorization;
@@ -50,36 +51,7 @@ namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
 
             app.MapGet("api/coupon/{id:int}", getByIdCoupon)
                 .WithName("GetCoupon")
-                .AddEndpointFilter(async (context, next) =>
-                {
-                    Console.WriteLine("Before 1st filer");
-
-                    var id = context.GetArgument<int>(2);
-
-                    
-
-                    if (id == 0)
-                    {
-                        return Results.BadRequest("Id can not be 0");
-                    }
-
-                    var result = await next(context);
-
-                    Console.WriteLine("After 1st filer");
-
-                    return result;
-                })
-                .AddEndpointFilter(async (context, next) =>
-                {
-                  
-                    Console.WriteLine("Before 2st filer");
-
-                    var result =  await next(context);
-
-                    Console.WriteLine("After 2st filer");
-
-                    return result;
-                })
+                .AddEndpointFilter<ParameterIDValidator>()
                 .Produces<ApiResponse>(StatusCodes.Status200OK)
                 .RequireAuthorization("AdminOnly");
         }
