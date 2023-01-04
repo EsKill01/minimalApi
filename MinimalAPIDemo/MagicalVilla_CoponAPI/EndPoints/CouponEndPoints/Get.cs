@@ -1,11 +1,13 @@
 ﻿using MagicalVilla_CoponAPI.models;
 using MagicalVilla_CoponAPI.Models;
 using MagicalVilla_CoponAPI.Repository.CouponRepository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
 {
     public static partial class CouponEndPoint
     {
+        [Authorize]
         private static async Task<IResult> gelAllCoponds(ICouponRepository _couponRepository, ILogger<Program> _logger)
         {
             ApiResponse apiResponse = new ApiResponse();
@@ -17,6 +19,7 @@ namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
             return Results.Ok(apiResponse);
         }
 
+        [Authorize]
         private static async Task<IResult> getByIdCoupon(ICouponRepository _couponRepository, ILogger<Program> _logger, int id)
         {
             ApiResponse apiResponse = new ApiResponse();
@@ -43,12 +46,12 @@ namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
             app.MapGet("api/coupon", gelAllCoponds)
                 .WithName("GetAllCoupons")
                 .Produces<ApiResponse>(StatusCodes.Status200OK)
-                .RequireAuthorization();
+                .RequireAuthorization("AdminOnly");
 
             app.MapGet("api/coupon/{id:int}", getByIdCoupon)
                 .WithName("GetCoupon")
                 .Produces<ApiResponse>(StatusCodes.Status200OK)
-                .RequireAuthorization();
+                .RequireAuthorization("AdminOnly");
         }
     }
 }

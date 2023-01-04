@@ -56,9 +56,9 @@ namespace MagicalVilla_CoponAPI.EndPoints.AuthEntPoints
 
         public static async void ConfigureCreateUserEndPoint(this WebApplication app)
         {
-            app.MapPost("api/auth", createUser)
+            app.MapPost("api/register", createUser)
                 .WithName("Create new user")
-                .WithDisplayName("Auth")
+                .WithDisplayName("register")
                 .Accepts<LocalUserRegistrationDTO>("application/json")
                 .Produces<ApiResponse>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest);

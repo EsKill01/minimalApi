@@ -6,10 +6,12 @@
     using MagicalVilla_CoponAPI.Models;
     using MagicalVilla_CoponAPI.Models.DTO.Coupon;
     using MagicalVilla_CoponAPI.Repository.CouponRepository;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public static partial class CouponEndPoint
     {
+        [Authorize]
         private static async Task<IResult> postCoupon(
             ICouponRepository _couponRepository, 
             IMapper _mapper,
@@ -59,7 +61,7 @@
                 .Accepts<CouponCreateDTO>("application/json")
                 .Produces<ApiResponse>(StatusCodes.Status201Created)
                 .Produces(StatusCodes.Status400BadRequest)
-                .RequireAuthorization();
+                .RequireAuthorization("AdminOnly");
         }
     }
 }

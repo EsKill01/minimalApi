@@ -79,7 +79,8 @@ namespace MagicalVilla_CoponAPI.Repository.AuthRepository
         {
 
             var localUser = _mapper.Map<LocalUser>(localUserDTO);
-            localUser.Role = "Admin";
+            //localUser.Role = "Admin";
+            localUser.Role = "Customer";
 
             await _db.LocalUsers.AddAsync(localUser);
             await _db.SaveChangesAsync();

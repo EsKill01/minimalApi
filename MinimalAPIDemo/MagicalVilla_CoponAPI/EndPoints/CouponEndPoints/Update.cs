@@ -3,12 +3,14 @@ using FluentValidation;
 using MagicalVilla_CoponAPI.Models;
 using MagicalVilla_CoponAPI.Models.DTO.Coupon;
 using MagicalVilla_CoponAPI.Repository.CouponRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
 {
     public static partial class CouponEndPoint
     {
+        [Authorize]
         private static async Task<IResult> updateCoupon(
             ICouponRepository _couponRepository, 
             IValidator<CouponUpdateDTO> _validator, 
@@ -67,7 +69,7 @@ namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
                 .Accepts<CouponUpdateDTO>("application/json")
                 .WithName("UpdateCoupon")
                 .Produces<ApiResponse>(StatusCodes.Status200OK).Produces(StatusCodes.Status400BadRequest)
-                .RequireAuthorization();
+                .RequireAuthorization("AdminOnly");
         }
     }
 }
