@@ -52,14 +52,33 @@ namespace MagicalVilla_CoponAPI.EndPoints.CouponEndPoints
                 .WithName("GetCoupon")
                 .AddEndpointFilter(async (context, next) =>
                 {
+                    Console.WriteLine("Before 1st filer");
+
                     var id = context.GetArgument<int>(2);
+
+                    
 
                     if (id == 0)
                     {
                         return Results.BadRequest("Id can not be 0");
                     }
 
-                    return await next(context);
+                    var result = await next(context);
+
+                    Console.WriteLine("After 1st filer");
+
+                    return result;
+                })
+                .AddEndpointFilter(async (context, next) =>
+                {
+                  
+                    Console.WriteLine("Before 2st filer");
+
+                    var result =  await next(context);
+
+                    Console.WriteLine("After 2st filer");
+
+                    return result;
                 })
                 .Produces<ApiResponse>(StatusCodes.Status200OK)
                 .RequireAuthorization("AdminOnly");
